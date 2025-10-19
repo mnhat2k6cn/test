@@ -10,6 +10,11 @@ public class GameManager {
     private int lives;
     private GameState gameState;
     private long window;
+    private GameLevel currentLevel;
+    private int currentLevelNumber=1;
+
+
+
 
     private Renderer renderer;
     private boolean leftPressed, rightPressed;
@@ -23,11 +28,14 @@ public class GameManager {
         this.powerUps = new ArrayList<>();
         this.renderer = new Renderer();
 
+        this.currentLevel = new GameLevel(currentLevelNumber);
+
         startGame();
         setupInput();
     }
 
     private void setupInput() {
+        //Này GLFW, nếu sau này có ai bấm phím A hoặc D, thì gọi giúp tôi hàm này nhé
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_A || key == GLFW_KEY_LEFT) {
                 leftPressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
@@ -45,25 +53,25 @@ public class GameManager {
 
     public void startGame() {
         paddle = new Paddle(350, 550, 100, 20);
-        ball = new Ball(400, 300, 15);
-        createBricks();
+        ball = new Ball(400, 500, 15);
+        bricks=currentLevel.getBricks();
     }
 
-    private void createBricks() {
-        bricks.clear();
-        float brickWidth = 75;
-        float brickHeight = 25;
-        float startX = 50;
-        float startY = 50;
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 10; col++) {
-                float x = startX + col * (brickWidth + 5);
-                float y = startY + row * (brickHeight + 5);
-                if (row < 2) bricks.add(new StrongBrick(x, y, brickWidth, brickHeight));
-                else bricks.add(new NormalBrick(x, y, brickWidth, brickHeight));
-            }
-        }
-    }
+//    private void createBricks() {
+//        bricks.clear();
+//        float brickWidth = 75;
+//        float brickHeight = 30;
+//        float startX = 0;
+//        float startY = 0;
+//        for (int row = 0; row < 6; row++) {
+//            for (int col = 0; col < 10; col++) {
+//                float x = startX + col * (brickWidth + 5);
+//                float y = startY + row * (brickHeight + 5);
+//                if (row < 2) bricks.add(new StrongBrick(x, y, brickWidth, brickHeight));
+//                else bricks.add(new NormalBrick(x, y, brickWidth, brickHeight));
+//            }
+//        }
+//    }
 
     public void updateGame(float deltaTime) {
         if (gameState != GameState.PLAYING) return;
@@ -79,9 +87,19 @@ public class GameManager {
         if (ball.isOutOfBounds()) {
             lives--;
             if (lives <= 0) gameState = GameState.GAME_OVER;
-            else ball = new Ball(400, 300, 15);
+            else ball = new Ball(400, 500, 15);
         }
-        if (bricks.isEmpty()) gameState = GameState.VICTORY;
+        if (bricks.isEmpty()) {
+            if (currentLevelNumber == 1) {
+                currentLevelNumber = 2;
+                currentLevel = new GameLevel(currentLevelNumber);
+                bricks = currentLevel.getBricks();
+                ball = new Ball(400, 500, 15); // reset ball cho map mới
+                paddle = new Paddle(350, 550, 100, 20);
+            } else {
+                gameState = GameState.VICTORY;
+            }
+        }
     }
 
     private void handleInput(float deltaTime) {
@@ -118,7 +136,9 @@ public class GameManager {
             PowerUp powerUp = powerUpIter.next();
             if (paddle.checkCollision(powerUp)) {
                 powerUp.applyEffect(paddle);
-                if (powerUp instanceof FastBallPowerUp) ball.setSpeed(450.0f);
+                if (powerUp instanceof FastBallPowerUp) {
+                    ball.setSpeed(450.0f);
+                }
                 powerUpIter.remove();
             }
         }
@@ -131,6 +151,8 @@ public class GameManager {
     private void restartGame() {
         lives = 3;
         score = 0;
+        currentLevelNumber = 1; // reset về level 1
+        currentLevel = new GameLevel(currentLevelNumber);
         gameState = GameState.PLAYING;
         powerUps.clear();
         startGame();

@@ -31,22 +31,22 @@ public class ArkanoidGame {
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        window = glfwCreateWindow(800, 600, "Arkanoid Game", NULL, NULL);
+
+        window = glfwCreateWindow(1200, 800, "Arkanoid Game", NULL, NULL);
         if (window == NULL) throw new RuntimeException("Failed to create GLFW window");
 
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1);
-            IntBuffer pHeight = stack.mallocInt(1);
-            glfwGetWindowSize(window, pWidth, pHeight);
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowPos(
-                    window,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );
-        }
+//        try (MemoryStack stack = stackPush()) {
+//            IntBuffer pWidth = stack.mallocInt(1);
+//            IntBuffer pHeight = stack.mallocInt(1);
+//            glfwGetWindowSize(window, pWidth, pHeight);
+//            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+//            glfwSetWindowPos(
+//                    window,
+//                    (vidmode.width() - pWidth.get(0)) / 2,
+//                    (vidmode.height() - pHeight.get(0)) / 2
+//            );
+//        }
 
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);

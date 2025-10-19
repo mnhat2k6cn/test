@@ -61,6 +61,19 @@
             <version>3.3.3</version>
             <classifier>natives-windows</classifier>
         </dependency>
+
+        <!-- STB (để load ảnh PNG, JPG, v.v.) -->
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <version>3.3.3</version>
+            <classifier>natives-windows</classifier>
+        </dependency>
     </dependencies>
 
     <build>

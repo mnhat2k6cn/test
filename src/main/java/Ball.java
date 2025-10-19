@@ -4,7 +4,7 @@ public class Ball extends MovableObject {
 
     public Ball(float x, float y, float size) {
         super(x, y, size, size);
-        this.speed = 300.0f;
+        this.speed = 250.0f;
         this.directionX = 1.0f;
         this.directionY = -1.0f;
         this.dx = directionX * speed;

@@ -2,6 +2,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public abstract class GameObject {
     protected float x, y, width, height;
+    protected float r = 1.0f, g = 1.0f, b = 1.0f;
 
     public GameObject(float x, float y, float width, float height) {
         this.x = x;
@@ -12,13 +13,22 @@ public abstract class GameObject {
 
     public abstract void update(float deltaTime);
 
+    public void setColor(float r, float g, float b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+
     public void render() {
+        glColor3f(r, g, b);
         glBegin(GL_QUADS);
         glVertex2f(x, y);
         glVertex2f(x + width, y);
         glVertex2f(x + width, y + height);
         glVertex2f(x, y + height);
         glEnd();
+
+
     }
 
     public boolean checkCollision(GameObject other) {
